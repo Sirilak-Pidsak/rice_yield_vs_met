@@ -46,7 +46,7 @@ tbl_temp_3 <- read_my_data("temperature_1986_2015.xlsx", temp_sheets[3], 120)
 yearmonth=bind_rows(tbl_temp_1[,3],tbl_temp_2[,3],tbl_temp_3[,3])
 daily_T=bind_rows(tbl_temp_1[,4:34],tbl_temp_2[,4:34],tbl_temp_3[,4:34])
 mean_monthly_T=rowMeans(daily_T,na.rm=T)
-monthly_mean_temp=data.frame(yearmonth,mean_daily_T)
+monthly_mean_temp=data.frame(yearmonth,mean_monthly_T)
 
 #Calculate annual average
 yr=1986:2015
