@@ -199,3 +199,15 @@ plot(tbl_yield)
 model1=lm(yield_per_rai$Yield.per.Rai~yield_per_rai$Year)
 summary(model1)
 plot(model1)
+
+model2=lm(yield_per_rai$Yield.per.Rai~annual_accumulated_rainfall$annual_accumulated_rainfall)
+summary(model2)
+plot(model2)
+
+model3=lm(yield_per_rai$Yield.per.Rai~annual_mean_temp$annual_mean_temp)
+summary(model3)
+plot(model3)
+
+model4=lm(yield_per_rai$Yield.per.Rai~annual_mean_humidity$annual_mean_humidity)
+summary(model4)
+plot(model4)
