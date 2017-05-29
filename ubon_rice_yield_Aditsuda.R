@@ -49,7 +49,13 @@ mean_monthly_T=rowMeans(daily_T,na.rm=T)
 monthly_mean_temp=data.frame(yearmonth,mean_daily_T)
 
 #Calculate annual average
-
+yr=1986:2015
+annual_mean_temp=rep(NA,length(yr))
+for (i in 1:length(yr)){
+ind.T=format(monthly_mean_temp[,1],'%Y')==yr[i]
+annual_mean_temp[i]=mean(monthly_mean_temp[ind.T,2])
+}
+annual_mean_temp=data.frame(yr,annual_mean_temp)
 
 # reformat sheet 1, 2 and 3 data
 reformat_tbl_temp_1 <- reformat_temp_data(tbl_temp_1) 
