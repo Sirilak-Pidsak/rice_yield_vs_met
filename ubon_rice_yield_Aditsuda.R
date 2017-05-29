@@ -75,15 +75,31 @@ humidity_sheets <- excel_sheets(path = "relative_humidity_1986_2015.xlsx")
 # import sheet 1, 2 and 3 data
 tbl_humidity_1 <- read_my_data("relative_humidity_1986_2015.xlsx", humidity_sheets[1], 120)
 tbl_humidity_2 <- read_my_data("relative_humidity_1986_2015.xlsx", humidity_sheets[2], 120)
-tbl_humidity_3 <- read_my_data("relative_humidity_1986_2015.xlsx", humidity_sheets[3], 225)
+tbl_humidity_3 <- read_my_data("relative_humidity_1986_2015.xlsx", humidity_sheets[3], 120)
+
+#Calculate monthly average
+yearmonth_H=bind_rows(tbl_humidity_1[,3],tbl_humidity_2[,3],tbl_humidity_3[,3])
+daily_H=bind_rows(tbl_humidity_1[,4:34],tbl_humidity_2[,4:34],tbl_humidity_3[,4:34])
+mean_monthly_H=rowMeans(daily_H,na.rm=T)
+monthly_mean_humidity=data.frame(yearmonth,mean_monthly_H)
+
+#Calculate annual average
+yr=1986:2015
+annual_mean_humidity=rep(NA,length(yr))
+for (i in 1:length(yr)){
+    ind.H=format(monthly_mean_humidity[,1],'%Y')==yr[i]
+    annual_mean_humidity[i]=mean(monthly_mean_humidity[ind.H,2])
+}
+annual_mean_humidity=data.frame(yr,annual_mean_humidity)
+
 
 # reformat sheet 1, 2 and 3 data
-tbl_humidity_1 <- reformat_humidity_data(tbl_humidity_1) 
-tbl_humidity_2 <- reformat_humidity_data(tbl_humidity_2) 
-tbl_humidity_3 <- reformat_humidity_data(tbl_humidity_3) 
+reformat_tbl_humidity_1 <- reformat_humidity_data(tbl_humidity_1) 
+reformat_tbl_humidity_2 <- reformat_humidity_data(tbl_humidity_2) 
+reformat_tbl_humidity_3 <- reformat_humidity_data(tbl_humidity_3) 
 
 # combine temperature data sets
-tbl_humidity <- bind_rows(tbl_humidity_1, tbl_humidity_2, tbl_humidity_3)
+tbl_humidity <- bind_rows(reformat_tbl_humidity_1, reformat_tbl_humidity_2, reformat_tbl_humidity_3)
 
 
 
@@ -95,15 +111,30 @@ rainfall_sheets <- excel_sheets(path = "precipitation_1986_2015.xlsx")
 # import sheet 1, 2 and 3 data
 tbl_rainfall_1 <- read_my_data("precipitation_1986_2015.xlsx", rainfall_sheets[1], 120)
 tbl_rainfall_2 <- read_my_data("precipitation_1986_2015.xlsx", rainfall_sheets[2], 120)
-tbl_rainfall_3 <- read_my_data("precipitation_1986_2015.xlsx", rainfall_sheets[3], 228)
+tbl_rainfall_3 <- read_my_data("precipitation_1986_2015.xlsx", rainfall_sheets[3], 120)
+
+#Calculate monthly average
+yearmonth_R=bind_rows(tbl_rainfall_1[,3],tbl_rainfall_2[,3],tbl_rainfall_3[,3])
+daily_R=bind_rows(tbl_rainfall_1[,4:34],tbl_rainfall_2[,4:34],tbl_rainfall_3[,4:34])
+mean_monthly_R=rowMeans(daily_R,na.rm=T)
+monthly_mean_rainfall=data.frame(yearmonth_R,mean_monthly_R)
+
+#Calculate annual average
+yr=1986:2015
+annual_mean_rainfall=rep(NA,length(yr))
+for (i in 1:length(yr)){
+    ind.R=format(monthly_mean_rainfall[,1],'%Y')==yr[i]
+    annual_mean_rainfall[i]=mean(monthly_mean_rainfall[ind.R,2])
+}
+annual_mean_rainfall=data.frame(yr,annual_mean_rainfall)
 
 # reformat sheet 1, 2 and 3 data
-tbl_rainfall_1 <- reformat_precip_data(tbl_rainfall_1) 
-tbl_rainfall_2 <- reformat_precip_data(tbl_rainfall_2) 
-tbl_rainfall_3 <- reformat_precip_data(tbl_rainfall_3) 
+reformat_tbl_rainfall_1 <- reformat_precip_data(tbl_rainfall_1) 
+reformat_tbl_rainfall_2 <- reformat_precip_data(tbl_rainfall_2) 
+reformat_tbl_rainfall_3 <- reformat_precip_data(tbl_rainfall_3) 
 
 # combine temperature data sets
-tbl_rainfall <- bind_rows(tbl_rainfall_1, tbl_rainfall_2, tbl_rainfall_3)
+tbl_rainfall <- bind_rows(reformat_tbl_rainfall_1, reformat_tbl_rainfall_2, reformat_tbl_rainfall_3)
 
 
 
@@ -120,22 +151,26 @@ tbl_yield <- read_excel(path = "rice_yield_1981_2016.xlsx",
                         n_max = 36
 )
 
+#Take yield_per_rai from 1986 to 2015
+yield_per_rai = data.frame(tbl_yield[6:35,2],tbl_yield[6:35,6])
+
+
 # reformat sheet 1, 2 and 3 data
-tbl_yield <- tbl_yield %>%
-    rename(Farming_Area = `Farming area`) %>%
-    rename(Harvested_Area = `Harvested area`) %>%
-    rename(Yield_per_Rai = `Yield per Rai (kg)`) %>%
-    select(Year, Farming_Area, Harvested_Area, Yield_per_Rai)
+# tbl_yield <- tbl_yield %>%
+#     rename(Farming_Area = `Farming area`) %>%
+#     rename(Harvested_Area = `Harvested area`) %>%
+#     rename(Yield_per_Rai = `Yield per Rai (kg)`) %>%
+#     select(Year, Farming_Area, Harvested_Area, Yield_per_Rai)
 
 
 
 # data - full  ------------------------------------------------------------
 
 # combine temperature, humidity, precipitation and yield
-tbl_data <- tbl_temp %>%
-    left_join(tbl_humidity, by = "Date") %>%
-    left_join(tbl_rainfall, by = "Date") #%>%
-    #left_join(tbl_yield, by = Date)
+# tbl_data <- tbl_temp %>%
+#     left_join(tbl_humidity, by = "Date") %>%
+#     left_join(tbl_rainfall, by = "Date") #%>%
+#     #left_join(tbl_yield, by = Date)
 
 
 
