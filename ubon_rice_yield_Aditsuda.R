@@ -81,7 +81,7 @@ tbl_humidity_3 <- read_my_data("relative_humidity_1986_2015.xlsx", humidity_shee
 yearmonth_H=bind_rows(tbl_humidity_1[,3],tbl_humidity_2[,3],tbl_humidity_3[,3])
 daily_H=bind_rows(tbl_humidity_1[,4:34],tbl_humidity_2[,4:34],tbl_humidity_3[,4:34])
 mean_monthly_H=rowMeans(daily_H,na.rm=T)
-monthly_mean_humidity=data.frame(yearmonth,mean_monthly_H)
+monthly_mean_humidity=data.frame(yearmonth_H,mean_monthly_H)
 
 #Calculate annual average
 yr=1986:2015
@@ -116,17 +116,17 @@ tbl_rainfall_3 <- read_my_data("precipitation_1986_2015.xlsx", rainfall_sheets[3
 #Calculate monthly average
 yearmonth_R=bind_rows(tbl_rainfall_1[,3],tbl_rainfall_2[,3],tbl_rainfall_3[,3])
 daily_R=bind_rows(tbl_rainfall_1[,4:34],tbl_rainfall_2[,4:34],tbl_rainfall_3[,4:34])
-mean_monthly_R=rowMeans(daily_R,na.rm=T)
-monthly_mean_rainfall=data.frame(yearmonth_R,mean_monthly_R)
+accumulated_monthly_R=rowSums(daily_R,na.rm=TRUE)
+monthly_accumulated_rainfall=data.frame(yearmonth_R,accumulated_monthly_R)
 
 #Calculate annual average
 yr=1986:2015
-annual_mean_rainfall=rep(NA,length(yr))
+annual_accumulated_rainfall=rep(NA,length(yr))
 for (i in 1:length(yr)){
-    ind.R=format(monthly_mean_rainfall[,1],'%Y')==yr[i]
-    annual_mean_rainfall[i]=mean(monthly_mean_rainfall[ind.R,2])
+    ind.R=format(monthly_accumulated_rainfall[,1],'%Y')==yr[i]
+    annual_accumulated_rainfall[i]=mean(monthly_accumulated_rainfall[ind.R,2])
 }
-annual_mean_rainfall=data.frame(yr,annual_mean_rainfall)
+annual_accumulated_rainfall=data.frame(yr,annual_accumulated_rainfall)
 
 # reformat sheet 1, 2 and 3 data
 reformat_tbl_rainfall_1 <- reformat_precip_data(tbl_rainfall_1) 
