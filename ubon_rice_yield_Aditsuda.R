@@ -195,4 +195,7 @@ plot(tbl_yield)
 
 
 
-
+#lm
+model1=lm(yield_per_rai$Yield.per.Rai~yield_per_rai$Year)
+summary(model1)
+plot(model1)
